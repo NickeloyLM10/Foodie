@@ -2,6 +2,7 @@ package com.example.foodie.meal
 
 import android.text.Layout
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,7 +22,8 @@ import com.example.foodie.meal.viewmodel.MealViewModel
 
 @Composable
 fun MealScreen(
-    viewmodel : MealViewModel = hiltViewModel()
+    viewmodel : MealViewModel = hiltViewModel(),
+    onItemClick: (String) -> Unit
 ) {
 
     val listOfMeals by remember {
@@ -33,7 +35,9 @@ fun MealScreen(
         Spacer(modifier = Modifier.height(30.dp))
         LazyColumn {
             items(listOfMeals){ item->
-                SingleMealItem(item)
+                SingleMealItem(item){
+                    onItemClick(it)
+                }
 
             }
         }
@@ -43,9 +47,13 @@ fun MealScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun SingleMealItem(
-    meal: Meal
+    meal: Meal,
+    onClick: (String) -> Unit
 ) {
-    Card(modifier = Modifier.padding(8.dp).fillMaxWidth(), elevation = 8.dp) {
+    Card(modifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth()
+        .clickable{ onClick(meal.strMeal) }, elevation = 8.dp) {
         Row(modifier = Modifier.padding(16.dp)) {
             Image(
                 modifier = Modifier.size(80.dp), painter = rememberImagePainter(
